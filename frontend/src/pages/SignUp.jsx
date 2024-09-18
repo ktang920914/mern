@@ -71,7 +71,7 @@ const SignUp = () => {
               <TextInput type='password' placeholder='password' id='password' onChange={handleChange}/>
             </div>
           
-            <Button type='submit' gradientDuoTone='purpleToPink' disabled={loading}>
+            <Button type='submit' className='uppercase' gradientDuoTone='purpleToPink' disabled={loading}>
               {
                 loading ? (
                   <>
