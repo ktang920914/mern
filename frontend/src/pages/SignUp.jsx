@@ -15,10 +15,10 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    try {
     if(!formData.username || !formData.email || !formData.password){
       return setErrorMessage('All fields are required')
     }
-    try {
       setLoading(true)
       setErrorMessage(null)
       const res = await fetch('/api/auth/signup', {
