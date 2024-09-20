@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import {Link, useNavigate} from 'react-router-dom'
 import {Label, TextInput, Button, Alert, Spinner} from 'flowbite-react'
+import Oauth from '../components/Oauth'
 
 const SignUp = () => {
 
@@ -81,6 +82,7 @@ const SignUp = () => {
                 ) : 'Sign up'
               }
             </Button>
+            <Oauth />
           </form>
 
           <div className='flex gap-2 text-sm mt-5'>
