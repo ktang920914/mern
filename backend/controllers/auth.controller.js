@@ -11,6 +11,27 @@ export const signup = async (req,res,next) => {
         return next(errorHandler(400, 'All fields are required'));
     }
 
+    if(username){
+        if(username.length < 6 || username.length > 12){
+            return next(errorHandler(400, 'Username must be at between 6 and 12 characters'))
+        }
+        if(username.includes(' ')){
+            return next(errorHandler(400, 'Username cannot contains empty spaces'))
+        }
+        if(username !== username.toLowerCase()){
+            return next(errorHandler(400, 'Username must be lowercase'))
+        }
+        if(!username.match(/^[a-zA-Z0-9]+$/)){
+            return next(errorHandler(400, 'Username can contains only letters and numbers'))
+        }
+    }
+
+    if(password){
+        if(password.length < 6){
+            return next(errorHandler(400, 'Password must be at lease 6 characters'))
+        }
+    }
+
     const userName = await User.findOne({username})
     if(userName){
         return next(errorHandler(400, 'Username is already used'));
