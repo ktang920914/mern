@@ -9,7 +9,7 @@ import 'react-circular-progressbar/dist/styles.css';
 import { updateStart, updateSuccess, updateFailure } from '../redux/user/userSlice'
 import {useDispatch} from 'react-redux'
 import { AiOutlineExclamationCircle } from "react-icons/ai";
-import { deleteUserStart,deleteUserSuccess,deleteUserFailure } from '../redux/user/userSlice'
+import { deleteUserStart,deleteUserSuccess,deleteUserFailure,signOutSuccess} from '../redux/user/userSlice'
 
 
 const DashProfile = () => {
@@ -143,6 +143,23 @@ const handleSubmit = async (e) => {
       }
   }
 
+  const handleSignOut = async () => {
+    try {
+      const res = await fetch('/api/user/signout', {
+        method: 'POST',
+      })
+      const data = await res.json()
+      if(data.success === false){
+        console.log(data.message)
+      }
+      if(res.ok){
+        dispatch(signOutSuccess())
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <div className='max-w-lg mx-auto p-3 w-full'>
       <h1 className='text-center my-7 text-3xl font-semibold'>Profile</h1>
@@ -187,7 +204,7 @@ const handleSubmit = async (e) => {
 
       <div className='text-red-500 flex justify-between mt-5'>
         <span className='cursor-pointer' onClick={() => setShowModal(true)}>Delete Account</span>
-        <span className='cursor-pointer'>Sign out</span>
+        <span className='cursor-pointer' onClick={handleSignOut}>Sign out</span>
       </div>
       {updateUserSuccess && (
         <Alert color='success' className='mt-5'>
