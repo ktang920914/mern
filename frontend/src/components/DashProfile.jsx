@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import {useSelector} from 'react-redux'
-import {TextInput, Button} from 'flowbite-react'
+import {TextInput, Button, Modal} from 'flowbite-react'
 import {getStorage, ref, uploadBytesResumable, getDownloadURL} from 'firebase/storage'
 import {app} from '../firebase'
 import {Alert} from 'flowbite-react'
@@ -8,10 +8,13 @@ import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { updateStart, updateSuccess, updateFailure } from '../redux/user/userSlice'
 import {useDispatch} from 'react-redux'
+import { AiOutlineExclamationCircle } from "react-icons/ai";
+import { deleteUserStart,deleteUserSuccess,deleteUserFailure } from '../redux/user/userSlice'
+
 
 const DashProfile = () => {
 
-  const {currentUser} = useSelector(state => state.user)
+  const {currentUser, error} = useSelector(state => state.user)
   const [imageFile,setImageFile] = useState(null)
   const [imageFileUrl,setImageFileUrl] = useState(null)
   const [imageFileUploadProgress,setImageFileUploadProgress] = useState(null)
@@ -23,6 +26,8 @@ const DashProfile = () => {
 
   const [formData,setFormData] = useState({})
   const dispatch = useDispatch()
+
+  const [showModal,setShowModal] = useState(false)
 
   const handleImageChange = (e) => {
     const file = e.target.files[0]
@@ -119,6 +124,25 @@ const handleSubmit = async (e) => {
     }
   }
 
+  const handleDeleteUser = async () => {
+      setShowModal(false)
+      try {
+        dispatch(deleteUserStart())
+        const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+          method: 'DELETE',
+        })
+        const data = await res.json()
+        if(data.success === false){
+          dispatch(deleteUserFailure(data.message))
+        }
+        if(res.ok){
+          dispatch(deleteUserSuccess(data))
+        }
+      } catch (error) {
+        dispatch(deleteUserFailure(error.message))
+      }
+  }
+
   return (
     <div className='max-w-lg mx-auto p-3 w-full'>
       <h1 className='text-center my-7 text-3xl font-semibold'>Profile</h1>
@@ -162,7 +186,7 @@ const handleSubmit = async (e) => {
       </form>
 
       <div className='text-red-500 flex justify-between mt-5'>
-        <span className='cursor-pointer'>Delete Account</span>
+        <span className='cursor-pointer' onClick={() => setShowModal(true)}>Delete Account</span>
         <span className='cursor-pointer'>Sign out</span>
       </div>
       {updateUserSuccess && (
@@ -175,6 +199,24 @@ const handleSubmit = async (e) => {
           {updateUserError}
         </Alert>
       )}
+      {error && (
+        <Alert color='failure' className='mt-5'>
+          {error}
+        </Alert>
+      )}
+      <Modal show={showModal} onClose={() => setShowModal(false)} popup size='md'>
+        <Modal.Header/>
+          <Modal.Body>
+            <div className='text-center'>
+              <AiOutlineExclamationCircle className='w-14 h-14 text-gray-400 dark:text-gray-200 mx-auto mb-4'/>
+            <h3 className='mb-5 text-lg text-gray-500 dark:text-gray-400'>Are you sure want to delete your account?</h3>
+            </div>
+            <div className='flex items-center justify-center gap-4'>
+              <Button color='failure' onClick={handleDeleteUser}>Yes, Sure</Button>
+              <Button color='gray'onClick={() => setShowModal(false)}>Cancel</Button>
+            </div>
+          </Modal.Body>
+      </Modal>
     </div>
   )
 }
