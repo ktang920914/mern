@@ -11,6 +11,12 @@ export const create = async (req,res,next) => {
             return next(errorHandler(403, 'Title and content fields are required'))
         }
 
+        const {title} = req.body
+
+        const postTitle = await Post.findOne({title})
+        if(postTitle){
+            return next(errorHandler(400, 'Title already exists'))
+        }
         const slug = req.body.title.split(' ').join('-').toLowerCase().replace(/[^a-zA-Z0-9-]/g, '')
         const newPost = new Post({
             ...req.body,
