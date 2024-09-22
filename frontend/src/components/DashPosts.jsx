@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import {useSelector} from 'react-redux'
-import {Table} from 'flowbite-react'
+import {Table, Button} from 'flowbite-react'
 import { Link } from 'react-router-dom'
 
 const DashPosts = () => {
 
   const {currentUser} = useSelector(state => state.user)
   const [userPosts,setUserPosts] = useState([])
+  const [showMore,setShowMore] = useState(true)
 
   useEffect(() => {
   
@@ -16,6 +17,9 @@ const DashPosts = () => {
         const data = await res.json()
         if(res.ok){
           setUserPosts(data.posts)
+          if(data.posts.length < 9){
+            setShowMore(false)
+          }
         }
       } catch (error) {
         console.log(error)
@@ -26,6 +30,22 @@ const DashPosts = () => {
       fetchPosts()
     }
   },[currentUser._id])
+
+  const handleShowMore = async () => {
+    const startIndex = userPosts.length
+    try {
+      const res = await fetch(`/api/post/getposts?userId/${currentUser._id}&startIndex=${startIndex}`)
+      const data = await res.json()
+      if(res.ok){
+        setUserPosts((prev) => [...prev, ...data.posts])
+      if(data.posts.length < 9){
+        setShowMore(false)
+      }
+    }} catch (error) {
+      console.log(error.message)
+    }
+  
+}
 
   return ( <div className='table-auto overflow-x-scroll md:mx-auto p-3 scrollbar
    scrollbar-track-slate-100 scrollbar-thumb-slate-300
@@ -71,16 +91,19 @@ const DashPosts = () => {
                 </Table.Cell>
               </Table.Row>
             </Table.Body>
-
-           
-
           ))}
-
         </Table>
+        {
+          showMore && (
+            <Button gradientDuoTone='purpleToPink' 
+            onClick={handleShowMore}
+            className='w-full self-center text-sm py-7' >Show More</Button>
+          )
+        }
       
       </>
     ) : (
-      <p>No post</p>
+      <p className='font-semibold text-3xl'>No post available</p>
     )}
   </div>
   )
