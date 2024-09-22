@@ -12,12 +12,18 @@ export const updateUser = async (req,res,next) => {
         return next(errorHandler(403, 'You are not allowed to update profile'))
     }
 
+    if(req.body.email === ''){
+        return next(errorHandler(400, 'Email is required'))
+    }
+
     if(req.body.password){
         if(req.body.password.length < 6){
             return next(errorHandler(400, 'Password must be at least 6 characters'))
         }
 
         req.body.password = bcryptjs.hashSync(req.body.password, 10)
+    }else if(req.body.password === ''){
+        return next(errorHandler(400, 'Password is required'))
     }
 
     if(req.body.username){
@@ -33,14 +39,16 @@ export const updateUser = async (req,res,next) => {
         if(!req.body.username.match(/^[a-zA-Z0-9]+$/)){
             return next(errorHandler(400, 'Username can contains only letters and numbers'))
         }
+    }else if(req.body.username === ''){
+        return next(errorHandler(400, 'Username is required'))
     }
-    
+
     const updatedUser = await User.findByIdAndUpdate(req.params.userId, {
         $set: {
-            username:req.body.username,
-            email:req.body.email,
-            profilePicture:req.body.profilePicture,
-            password:req.body.password,
+            username: req.body.username,
+            email: req.body.email,
+            profilePicture: req.body.profilePicture,
+            password: req.body.password,
         },
     },{new:true})
 
@@ -49,4 +57,17 @@ export const updateUser = async (req,res,next) => {
     }catch(error){
         next(error)
     } 
+}
+
+export const deleteUser = async (req,res,next) => {
+    try {
+        if(req.user.id !== req.params.userId){
+            return next(errorHandler(403 , 'You are not allowed to delete profile'))
+        }
+
+        await User.findByIdAndDelete(req.params.userId)
+        res.status(200).json('User is deleted')
+    } catch (error) {
+        next(error)
+    }
 }

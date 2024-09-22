@@ -6,7 +6,7 @@ import {app} from '../firebase'
 import {Alert} from 'flowbite-react'
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import { updateInStart, updateInSuccess, updateInFailure } from '../redux/user/userSlice'
+import { updateStart, updateSuccess, updateFailure } from '../redux/user/userSlice'
 import {useDispatch} from 'react-redux'
 
 const DashProfile = () => {
@@ -67,6 +67,8 @@ const DashProfile = () => {
       setImageFile(null)
       setImageFileUrl(null)
       setImageFileUploading(false)
+      setUpdateUserError(null)
+      setUpdateUserSuccess(null)
     },
     () => {
       getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
@@ -83,8 +85,8 @@ const DashProfile = () => {
   }
  
 const handleSubmit = async (e) => {
-  try{  
-   e.preventDefault()
+  try{
+  e.preventDefault()
     setUpdateUserSuccess(null)
     setUpdateUserError(null)
     if(Object.keys(formData).length === 0){
@@ -95,22 +97,24 @@ const handleSubmit = async (e) => {
       setUpdateUserError('Please wait image to upload')
       return;
     }
-      dispatch(updateInStart())
+      dispatch(updateStart())
       const res = await fetch(`/api/user/update/${currentUser._id}`, {
         method: 'PUT',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(formData),
       })
       const data = await res.json()
-      if(!res.ok){
-        dispatch(updateInFailure(data.message))
+      if(data.success === false){
+        dispatch(updateFailure(data.message))
         setUpdateUserError(data.message)
-      }else{
-        dispatch(updateInSuccess(data.message)) 
+      }
+      if(res.ok){
+        dispatch(updateSuccess(data)) 
         setUpdateUserSuccess('User updated successfully')
       }
+      
     } catch (error) {
-      dispatch(updateInFailure(error.message))
+      dispatch(updateFailure(error.message))
       setUpdateUserError(error.message)
     }
   }
