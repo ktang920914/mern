@@ -16,9 +16,9 @@ const DashPosts = () => {
   
     const fetchPosts = async () => {
       try {
-        const res = await fetch(`/api/post/getposts?userId=${currentUser._id}`)
+        const res = await fetch(`/api/post/getposts`)
         const data = await res.json()
-        if(res.ok){
+        if(data.success !== false){
           setUserPosts(data.posts)
           if(data.posts.length < 9){
             setShowMore(false)
@@ -29,7 +29,7 @@ const DashPosts = () => {
       }
     }
 
-    if(currentUser.isAdmin ){
+    if(currentUser.isAdmin){
       fetchPosts()
     }
   },[currentUser._id])
