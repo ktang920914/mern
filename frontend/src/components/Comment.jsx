@@ -6,7 +6,7 @@ import { Textarea } from 'flowbite-react';
 import { Button } from 'flowbite-react';
 
 
-const Comment = ({comment, onLike, onEdit}) => {
+const Comment = ({comment, onLike, onEdit, onDelete}) => {
 
     const [user,setUser] = useState({})
     const {currentUser} = useSelector(state => state.user)
@@ -49,6 +49,7 @@ const handleSave = async () => {
         console.log(error.message)
     }
 }
+
 
   return (
     <div className='flex p-4 border-b dark:border-gray-600 text-sm'>
@@ -104,10 +105,16 @@ const handleSave = async () => {
                     {
                         currentUser && (currentUser._id === comment.userId || currentUser.isAdmin) && 
                         (
+                        <>
                         <button type='button' className='text-gray-400 hover:text-blue-500'
                         onClick={handleEdit}>
                             Edit
                         </button>
+                        <button type='button' className='text-gray-400 hover:text-red-500'
+                        onClick={() => onDelete(comment._id)}>
+                            Delete
+                        </button>
+                        </>
                         )
                     }
                     </div>
