@@ -7,6 +7,8 @@ import { useDispatch } from 'react-redux';
 import { signOutSuccess } from '../redux/user/userSlice';
 import { HiDocumentText } from "react-icons/hi";
 import { useSelector } from 'react-redux';
+import { HiOutlineUserGroup } from "react-icons/hi";
+
 
 
 const DashSidebar = () => {
@@ -63,6 +65,18 @@ const DashSidebar = () => {
               icon={HiDocumentText}
               as='div'>
               Posts
+            </Sidebar.Item>          
+          
+          </Link>
+          )}
+
+          {currentUser.isAdmin && (
+          <Link to='/dashboard?tab=users'>
+            <Sidebar.Item
+              active={tab === 'users'}
+              icon={HiOutlineUserGroup}
+              as='div'>
+              Users
             </Sidebar.Item>          
           
           </Link>

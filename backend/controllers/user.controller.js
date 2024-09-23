@@ -100,7 +100,7 @@ export const getUsers = async (req,res,next) => {
             return rest
         })
 
-        const totalUsers = User.countDocuments()
+        const totalUsers = await User.countDocuments()
         
         const now = new Date()
 
@@ -115,7 +115,7 @@ export const getUsers = async (req,res,next) => {
     })
 
     res.status(200).json({
-        users,
+        users:usersWithoutPassword,
         totalUsers,
         lastMonthUsers
     })
