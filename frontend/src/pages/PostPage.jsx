@@ -1,6 +1,7 @@
 import { Spinner, Button } from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
+import CallToAction from '../components/CallToAction'
 
 const PostPage = () => {
 
@@ -58,6 +59,9 @@ if (loading) return <div className='flex justify-center items-center min-h-scree
         <div className='p-3 max-w-2xl post-content mx-auto' 
         dangerouslySetInnerHTML={{__html:post && post.content}}>
 
+        </div>
+        <div className='max-w-4xl w-full mx-auto'>
+            <CallToAction />
         </div>
     </main>
   )
