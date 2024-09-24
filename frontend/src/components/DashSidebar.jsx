@@ -8,6 +8,8 @@ import { signOutSuccess } from '../redux/user/userSlice';
 import { HiDocumentText } from "react-icons/hi";
 import { useSelector } from 'react-redux';
 import { HiOutlineUserGroup } from "react-icons/hi";
+import { HiAnnotation } from "react-icons/hi";
+
 
 
 
@@ -77,6 +79,18 @@ const DashSidebar = () => {
               icon={HiOutlineUserGroup}
               as='div'>
               Users
+            </Sidebar.Item>          
+          
+          </Link>
+          )}
+
+          {currentUser.isAdmin && (
+          <Link to='/dashboard?tab=comments'>
+            <Sidebar.Item
+              active={tab === 'comments'}
+              icon={HiAnnotation}
+              as='div'>
+              Comments
             </Sidebar.Item>          
           
           </Link>
