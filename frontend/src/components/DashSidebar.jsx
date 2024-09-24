@@ -9,6 +9,7 @@ import { HiDocumentText } from "react-icons/hi";
 import { useSelector } from 'react-redux';
 import { HiOutlineUserGroup } from "react-icons/hi";
 import { HiAnnotation } from "react-icons/hi";
+import { HiChartPie } from "react-icons/hi";
 
 
 
@@ -59,6 +60,18 @@ const DashSidebar = () => {
               Profile
             </Sidebar.Item>
           </Link>
+
+          {currentUser.isAdmin && (
+          <Link to='/dashboard?tab=dashboard'>
+            <Sidebar.Item
+              active={tab === 'dashboard' || !'tab'}
+              icon={HiChartPie}
+              as='div'>
+              Dashboard
+            </Sidebar.Item>          
+          
+          </Link>
+          )}
 
           {currentUser.isAdmin && (
           <Link to='/dashboard?tab=posts'>
