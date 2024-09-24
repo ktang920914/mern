@@ -14,6 +14,7 @@ import AdminPrivateRoute from './components/AdminPrivateRoute'
 import UpdatePost from './pages/UpdatePost'
 import PostPage from './pages/PostPage'
 import ScrollToTop from './components/ScrollToTop'
+import Search from './pages/Search'
 
 const App = () => {
   return (
@@ -37,6 +38,7 @@ const App = () => {
         <Route path='/post/:postSlug' element={<PostPage/>}/>
         <Route path='/sign-in' element={<SignIn />}/>
         <Route path='/sign-up' element={<SignUp />}/>
+        <Route path='/search' element={<Search />}/>
       </Routes>
       <FooterComp />
     </BrowserRouter>
