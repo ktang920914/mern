@@ -7,7 +7,11 @@ export default {
 
   ],
   theme: {
-    extend: {},
+    extend: {
+      animation:{
+        'spin-slow': 'spin 5s linear infinite',
+      },
+    },
   },
   plugins: [require('flowbite/plugin'),
     require('tailwind-scrollbar'),       
