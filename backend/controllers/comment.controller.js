@@ -9,6 +9,10 @@ export const createComment = async(req,res,next) => {
             return next(errorHandler(403, 'You are not allowed to create comment'))
         }
 
+        if(!content || content === ''){
+            return next(errorHandler(400, 'Please add a comment to submit'))
+        }
+
         const newComment = new Comment({
             content,
             userId,
